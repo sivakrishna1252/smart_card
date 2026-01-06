@@ -4,6 +4,8 @@ from sqlalchemy.orm import sessionmaker
 from app.core.config import settings
 
 SQL_ALCHEMY_DATABASE_URL = settings.DATABASE_URL
+
+
 # Check if using SQLite
 if SQL_ALCHEMY_DATABASE_URL.startswith("sqlite"):
     connect_args = {"check_same_thread": False}
@@ -14,6 +16,7 @@ else:
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
+
 
 # Dependency
 def get_db():

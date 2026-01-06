@@ -5,12 +5,17 @@ from app.core.database import engine, Base
 from app.api import discounts_router, cart_router
 
 from sqlalchemy import text
+from fastapi import Request
+from fastapi.responses import JSONResponse
+import traceback
 
-# patch logic mowa
+
+
+# patch logic
 def patch_database():
     with engine.connect() as connection:
         with connection.begin():
-            # Drop old column if it exists to avoid constraint violations mowa
+            # Drop old column if it exists to avoid constraint violations
             try:
                 connection.execute(text("ALTER TABLE discounts DROP COLUMN IF EXISTS minimum_threshold"))
             except Exception as e:
@@ -28,6 +33,9 @@ def patch_database():
                 except Exception as e:
                     print(f"Patch skip {col}: {e}")
 
+
+
+
 # Apply patch and create tables
 try:
     patch_database()
@@ -38,6 +46,7 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title=settings.PROJECT_NAME)
 
+
 # CORS
 app.add_middleware(
     CORSMiddleware,
@@ -47,6 +56,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+
 # Include Routers
 app.include_router(discounts_router)
 app.include_router(cart_router)
@@ -55,9 +66,9 @@ app.include_router(cart_router)
 def read_root():
     return {"message": "Welcome to Smart Cart API"}
 
-from fastapi import Request
-from fastapi.responses import JSONResponse
-import traceback
+
+
+
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
@@ -69,6 +80,6 @@ async def global_exception_handler(request: Request, exc: Exception):
         content={
             "message": "Internal Server Error", 
             "detail": error_msg,
-            "trace": stack_trace.splitlines()[-3:] # Send last 3 lines of trace for safety/brevity
+            "trace": stack_trace.splitlines()[-3:]    # Send last 3 lines of trace for safety/brevity
         },
     )

@@ -1,6 +1,8 @@
 from sqlalchemy import Column, Integer, Float, Boolean
 from app.core.database import Base
 
+
+
 class Discount(Base):
     __tablename__ = "discounts"
 

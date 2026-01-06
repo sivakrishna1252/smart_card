@@ -54,6 +54,7 @@ def create_order(db: Session, order_data: OrderCreate):
             if rule.discount_percent > 0:
                 final_percent = rule.discount_percent
 
+
     # 2. If not newly unlocked, show Motivator for the NEXT tier
     if not newly_unlocked:
         next_rule = None
@@ -68,10 +69,13 @@ def create_order(db: Session, order_data: OrderCreate):
         else:
             message = "Order placed successfully!"
 
+
     # 4. Calculate Final Values
     discount_amount = (current_total * final_percent) / 100
     final_amount = current_total - discount_amount
     
+
+
     # Create DB Record
     db_order = Order(
         user_id=order_data.user_id,
@@ -85,6 +89,8 @@ def create_order(db: Session, order_data: OrderCreate):
     db.commit()
     db.refresh(db_order)
     
+
+
     # Add Products
     order_products = []
     for product in order_data.products:
@@ -99,6 +105,8 @@ def create_order(db: Session, order_data: OrderCreate):
         
     db.commit()
     
+
+
     # Response Construction
     products_response = []
     receipt_lines = []
@@ -123,6 +131,9 @@ def create_order(db: Session, order_data: OrderCreate):
     receipt_lines.append("-" * 20)
     receipt_lines.append(f"Payable Amount: ₹{final_amount:.1f}")
     
+
+
+
     # User stats
     user_orders = db.query(Order).filter(Order.user_id == order_data.user_id).all()
     

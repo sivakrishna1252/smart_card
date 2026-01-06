@@ -13,9 +13,9 @@ class OrderResponse(BaseModel):
     discount_amount: float
     payable_amount: float
     product_count: int
-    products: List[dict]  # Simple dict with product_number, name, price, quantity, subtotal
+    products: List[dict]     # Simple dict with product_number, name, price, quantity, subtotal
     message: str
-    receipt_text: List[str]  # Visual breakdown of the bill
+    receipt_text: List[str]     # Visual breakdown of the bill
     user_total_orders: int
 
     class Config:

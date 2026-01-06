@@ -11,8 +11,10 @@ def get_discounts(db: Session, skip: int = 0, limit: int = 100):
 def get_active_discounts(db: Session):
     return db.query(Discount).filter(Discount.active == True).order_by(Discount.target_amount).all()
 
-def create_discount(db: Session, discount: DiscountCreate):
+
+
     # Find the smallest available ID (fill the "holes")
+def create_discount(db: Session, discount: DiscountCreate):
     existing_ids = db.query(Discount.id).order_by(Discount.id).all()
     existing_ids = [id_tuple[0] for id_tuple in existing_ids]
     
@@ -29,6 +31,9 @@ def create_discount(db: Session, discount: DiscountCreate):
     db.refresh(db_discount)
     return db_discount
 
+
+
+
 def update_discount(db: Session, discount_id: int, discount: DiscountUpdate):
     db_discount = get_discount(db, discount_id)
     if not db_discount:
@@ -40,6 +45,9 @@ def update_discount(db: Session, discount_id: int, discount: DiscountUpdate):
     db.commit()
     db.refresh(db_discount)
     return db_discount
+
+
+
 
 def delete_discount(db: Session, discount_id: int):
     db_discount = get_discount(db, discount_id)
